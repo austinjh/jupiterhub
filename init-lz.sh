@@ -1,7 +1,7 @@
 azloc="uksouth"
 rgname="jupyterhubaks"
 vnet="jh-vnet"
-subnet_name"jhsubnet"
+subnet_name="jhsubnet"
 
 
 #az login
@@ -18,7 +18,7 @@ az network vnet create \
    --name $vnet \
    --address-prefixes 10.0.0.0/16 \
    --subnet-name $subnet_name \
-   --subnet-prefix 10.240.0.0/24
+   --subnet-prefix 10.0.240.0/24
 
 VNET_ID=$(az network vnet show \
    --resource-group $rgname \

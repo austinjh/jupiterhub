@@ -1,10 +1,10 @@
 azloc="uksouth"
 rgname="jupyterhubaks"
 vnet="jh-vnet"
-subnet_name"jhsubnet"
+subnet_name="jhsubnet"
 
 jhspname="jupyterhub-sp"
-
+jhclustername="jh1"
 
 
 VNET_ID=$(az network vnet show \
@@ -26,15 +26,16 @@ SP_PASSWD=$(az ad sp create-for-rbac \
    --scopes $VNET_ID \
    --query password \
    --output tsv)
+
 SP_ID=$(az ad app list \
-   --filter "displayname eq 'jhspname'" \
+   --filter "displayname eq '${jhspname}'" \
    --query [0].appId \
    --output tsv)
 
 az aks create \
-   --name <CLUSTER-NAME> \
-   --resource-group <RESOURCE-GROUP-NAME> \
-   --ssh-key-value ssh-key-<CLUSTER-NAME>.pub \
+   --name $jhclustername \
+   --resource-group $rgname \
+   --ssh-key-value ../ssh-key-${jhclustername}.pub \
    --node-count 3 \
    --node-vm-size Standard_D2s_v3 \
    --service-principal $SP_ID \
@@ -43,6 +44,6 @@ az aks create \
    --docker-bridge-address 172.17.0.1/16 \
    --network-plugin azure \
    --network-policy azure \
-   --service-cidr 10.0.0.0/16 \
+   --service-cidr 10.0.0.0/24 \
    --vnet-subnet-id $SUBNET_ID \
    --output table
